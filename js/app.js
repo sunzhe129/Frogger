@@ -1,7 +1,9 @@
-const blockWidth = 101;
-const blockHeight = 83;
-const numberOfRows = 6;
-const numberOfColumns = 5;
+"use strict";
+
+const BLOCKWIDTH = 101;
+const BLOCKHEIGHT = 83;
+const NUMBEROFROWS = 6;
+const NUMBEROFCOLUMNS = 5;
 
 var Enemy = function() {
     this.minVelocity = 200;
@@ -17,10 +19,10 @@ Enemy.prototype.setInitialPosition = function() {
     this.rowIndex = Math.floor(Math.random() * 3) + 1;
     this.columnIndex = -1;
     // The X coordinate of the initial position, let it be out side of canvas.
-    this.x = -blockWidth;
+    this.x = -BLOCKWIDTH;
     // The offset in Y axis to make sure enemy-bug displays at the center of the block.
     this.yOffset = 20;
-    this.y = blockHeight * this.rowIndex - this.yOffset;
+    this.y = BLOCKHEIGHT * this.rowIndex - this.yOffset;
     this.velocity = this.minVelocity + (this.maxVelocity - this.minVelocity) * Math.random();
 }
 
@@ -28,9 +30,9 @@ Enemy.prototype.update = function(dt) {
     this.x += this.velocity * dt;
     // When the enemy bug moves into any stone block completely, then we think its columnIndex changes to
     // correspond to that block
-    this.columnIndex = Math.floor(this.x / blockWidth);
+    this.columnIndex = Math.floor(this.x / BLOCKWIDTH);
     // If enemy-bug moves out side of the right of canvas, reset its position to the initial position.
-    if (this.columnIndex > (numberOfColumns - 1)) {
+    if (this.columnIndex > (NUMBEROFCOLUMNS - 1)) {
         this.setInitialPosition();
     }
 };
@@ -49,10 +51,10 @@ var Player = function() {
 
 Player.prototype.setInitialPosition = function() {
     // The player's initial position is centered at the bottom row
-    this.rowIndex = numberOfRows - 1;
-    this.columnIndex = Math.floor(numberOfColumns / 2);
-    this.x = blockWidth * this.columnIndex;
-    this.y = blockHeight * this.rowIndex;
+    this.rowIndex = NUMBEROFROWS - 1;
+    this.columnIndex = Math.floor(NUMBEROFCOLUMNS / 2);
+    this.x = BLOCKWIDTH * this.columnIndex;
+    this.y = BLOCKHEIGHT * this.rowIndex;
 }
 
 Player.prototype.update = function(dt) {
@@ -63,9 +65,9 @@ Player.prototype.update = function(dt) {
     for (const enemy of allEnemies) {
         if ((this.rowIndex === enemy.rowIndex) &&
             // Detect if the enemy hits the left edge of the player
-            ((((this.columnIndex - 1) === enemy.columnIndex) && ((enemy.x + blockWidth) >= (this.x + this.xOffsetInImage))) ||
+            ((((this.columnIndex - 1) === enemy.columnIndex) && ((enemy.x + BLOCKWIDTH) >= (this.x + this.xOffsetInImage))) ||
             // Detect if the enemy hits the right edge of the player
-            ((this.columnIndex === enemy.columnIndex) && (enemy.x <= (this.x + blockWidth - this.xOffsetInImage))))) {
+            ((this.columnIndex === enemy.columnIndex) && (enemy.x <= (this.x + BLOCKWIDTH - this.xOffsetInImage))))) {
             this.setInitialPosition();
             break;
         }
@@ -81,31 +83,32 @@ Player.prototype.handleInput = function(key) {
         case 'left':
             if (this.columnIndex > 0) {
                 this.columnIndex--;
-                this.x = blockWidth * this.columnIndex;
+                this.x = BLOCKWIDTH * this.columnIndex;
             }
             break;
         case 'up':
             if (this.rowIndex > 0) {
                 this.rowIndex--;
                 if (this.rowIndex === 0) {
+                    alert('Bingo!');
                     // Move to water block successfully, so we reset to initial position.
                     this.setInitialPosition();
                 }
                 else {
-                    this.y = blockHeight * this.rowIndex;
+                    this.y = BLOCKHEIGHT * this.rowIndex;
                 }
             }
             break;
         case 'right':
-            if (this.columnIndex < (numberOfColumns - 1)) {
+            if (this.columnIndex < (NUMBEROFCOLUMNS - 1)) {
                 this.columnIndex++;
-                this.x = blockWidth * this.columnIndex;
+                this.x = BLOCKWIDTH * this.columnIndex;
             }
             break;
         case 'down':
-            if (this.rowIndex < (numberOfRows - 1)) {
+            if (this.rowIndex < (NUMBEROFROWS - 1)) {
                 this.rowIndex++;
-                this.y = blockHeight * this.rowIndex;
+                this.y = BLOCKHEIGHT * this.rowIndex;
             }
             break;
     }
